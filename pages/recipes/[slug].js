@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { contentful } from "../../external/contentful/contentful";
+import Skeleton from "../../components/Skeleton";
 
 export const getStaticPaths = async () => {
   const res = await contentful.getEntries({ content_type: "recipe" });
@@ -13,7 +14,7 @@ export const getStaticPaths = async () => {
   });
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
@@ -32,6 +33,7 @@ export const getStaticProps = async (context) => {
 };
 
 export default function RecipeDetails(props) {
+  if (!props.recipes) return <Skeleton />;
   const { featuredImage, title, cookingTime, ingredients, method } =
     props.recipe.fields;
   return (
